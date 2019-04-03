@@ -3,21 +3,25 @@ import axios from 'axios'
 import router from '@/router'
 import qs from 'qs'
 import merge from 'lodash/merge'
-import { clearLoginInfo } from '@/utils'
+import moment from 'moment'
+import {
+  clearLoginInfo
+} from '@/utils'
 
 const http = axios.create({
   timeout: 1000 * 30,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json; charset=utf-8'
-  }
+  },
+  isRetryRequest: false
 })
 
 /**
  * 请求拦截
  */
 http.interceptors.request.use(config => {
-  config.headers['token'] = Vue.cookie.get('token') // 请求头带上token
+  config.headers['Authorization'] = `Bearer ${Vue.cookie.get('token')}` // 请求头带上token
   return config
 }, error => {
   return Promise.reject(error)
@@ -27,12 +31,67 @@ http.interceptors.request.use(config => {
  * 响应拦截
  */
 http.interceptors.response.use(response => {
-  if (response.data && response.data.code === 401) { // 401, token失效
-    clearLoginInfo()
-    router.push({ name: 'login' })
-  }
   return response
 }, error => {
+  if (error.response) {
+    switch (error.response.status) {
+      case 401:
+        let ReLogin = false
+        let config = error.config
+        let tokenValidTime = JSON.parse(Vue.cookie.get('token_valid_time'))
+        if (tokenValidTime !== null) {
+          let expiredAt = tokenValidTime["expired_at"]
+          let refreshExpiredAt = tokenValidTime["refresh_expired_at"]
+          let now = moment()
+          if (!config.isRetryRequest && now.isAfter(expiredAt) && now.isBefore(refreshExpiredAt)) {
+            const refresh = new Promise((resolve, reject) => {
+              //刷新token
+              Vue.http.getRefreshToken().then(({
+                data
+              }) => {
+                if (data && data.code === 0) {
+                  //修改flag
+                  config.isRetryRequest = true;
+                  //修改cookie token
+                  Vue.cookie.set("token", data.data.token);
+                  Vue.cookie.set(
+                    "token_valid_time",
+                    JSON.stringify({
+                      expired_at: data.data.expired_at,
+                      refresh_expired_at: data.data.refresh_expired_at
+                    })
+                  );
+                  //修改原请求的token
+                  config.headers.Authorization = `Bearer ${data.data.token}`;
+                  resolve(axios(config))
+                } else {
+                  ReLogin = true
+                }
+              }).catch(() => {
+                //失败重新登录
+                clearLoginInfo()
+                router.push({
+                  name: 'login'
+                })
+                throw error;
+              })
+            })
+            return refresh;
+          } else {
+            ReLogin = true
+          }
+        } else {
+          ReLogin = true
+        }
+        if (ReLogin) {
+          clearLoginInfo()
+          router.push({
+            name: 'login'
+          })
+        }
+        break;
+    }
+  }
   return Promise.reject(error)
 })
 

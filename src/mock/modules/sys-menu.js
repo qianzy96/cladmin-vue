@@ -1,6 +1,5 @@
 // 生成数据列表
-var dataList = [
-  {
+var dataList = [{
     'menuId': 1,
     'parentId': 0,
     'parentName': null,
@@ -378,132 +377,129 @@ var dataList = [
     'list': null
   }
 ]
-var navDataList = [
-  {
-    'menuId': 1,
-    'parentId': 0,
-    'parentName': null,
-    'name': '系统管理',
-    'url': null,
-    'perms': null,
-    'type': 0,
-    'icon': 'system',
-    'orderNum': 0,
-    'open': null,
-    'list': [
-      {
-        'menuId': 2,
-        'parentId': 1,
-        'parentName': null,
-        'name': '管理员列表',
-        'url': 'sys/user',
-        'perms': null,
-        'type': 1,
-        'icon': 'admin',
-        'orderNum': 1,
-        'open': null,
-        'list': null
-      },
-      {
-        'menuId': 3,
-        'parentId': 1,
-        'parentName': null,
-        'name': '角色管理',
-        'url': 'sys/role',
-        'perms': null,
-        'type': 1,
-        'icon': 'role',
-        'orderNum': 2,
-        'open': null,
-        'list': null
-      },
-      {
-        'menuId': 4,
-        'parentId': 1,
-        'parentName': null,
-        'name': '菜单管理',
-        'url': 'sys/menu',
-        'perms': null,
-        'type': 1,
-        'icon': 'menu',
-        'orderNum': 3,
-        'open': null,
-        'list': null
-      },
-      {
-        'menuId': 5,
-        'parentId': 1,
-        'parentName': null,
-        'name': 'SQL监控',
-        'url': 'http://localhost:8080/renren-fast/druid/sql.html',
-        'perms': null,
-        'type': 1,
-        'icon': 'sql',
-        'orderNum': 4,
-        'open': null,
-        'list': null
-      },
-      {
-        'menuId': 6,
-        'parentId': 1,
-        'parentName': null,
-        'name': '定时任务',
-        'url': 'job/schedule',
-        'perms': null,
-        'type': 1,
-        'icon': 'job',
-        'orderNum': 5,
-        'open': null,
-        'list': null
-      },
-      {
-        'menuId': 27,
-        'parentId': 1,
-        'parentName': null,
-        'name': '参数管理',
-        'url': 'sys/config',
-        'perms': 'sys:config:list,sys:config:info,sys:config:save,sys:config:update,sys:config:delete',
-        'type': 1,
-        'icon': 'config',
-        'orderNum': 6,
-        'open': null,
-        'list': null
-      },
-      {
-        'menuId': 30,
-        'parentId': 1,
-        'parentName': null,
-        'name': '文件上传',
-        'url': 'oss/oss',
-        'perms': 'sys:oss:all',
-        'type': 1,
-        'icon': 'oss',
-        'orderNum': 6,
-        'open': null,
-        'list': null
-      },
-      {
-        'menuId': 29,
-        'parentId': 1,
-        'parentName': null,
-        'name': '系统日志',
-        'url': 'sys/log',
-        'perms': 'sys:log:list',
-        'type': 1,
-        'icon': 'log',
-        'orderNum': 7,
-        'open': null,
-        'list': null
-      }
-    ]
-  }
-]
+var navDataList = [{
+  'menuId': 1,
+  'parentId': 0,
+  'parentName': null,
+  'name': '系统管理',
+  'url': null,
+  'perms': null,
+  'type': 0,
+  'icon': 'system',
+  'orderNum': 0,
+  'open': null,
+  'list': [{
+      'menuId': 2,
+      'parentId': 1,
+      'parentName': null,
+      'name': '管理员列表',
+      'url': 'sys/user',
+      'perms': null,
+      'type': 1,
+      'icon': 'admin',
+      'orderNum': 1,
+      'open': null,
+      'list': null
+    },
+    {
+      'menuId': 3,
+      'parentId': 1,
+      'parentName': null,
+      'name': '角色管理',
+      'url': 'sys/role',
+      'perms': null,
+      'type': 1,
+      'icon': 'role',
+      'orderNum': 2,
+      'open': null,
+      'list': null
+    },
+    {
+      'menuId': 4,
+      'parentId': 1,
+      'parentName': null,
+      'name': '菜单管理',
+      'url': 'sys/menu',
+      'perms': null,
+      'type': 1,
+      'icon': 'menu',
+      'orderNum': 3,
+      'open': null,
+      'list': null
+    },
+    {
+      'menuId': 5,
+      'parentId': 1,
+      'parentName': null,
+      'name': 'SQL监控',
+      'url': 'http://localhost:8080/renren-fast/druid/sql.html',
+      'perms': null,
+      'type': 1,
+      'icon': 'sql',
+      'orderNum': 4,
+      'open': null,
+      'list': null
+    },
+    {
+      'menuId': 6,
+      'parentId': 1,
+      'parentName': null,
+      'name': '定时任务',
+      'url': 'job/schedule',
+      'perms': null,
+      'type': 1,
+      'icon': 'job',
+      'orderNum': 5,
+      'open': null,
+      'list': null
+    },
+    {
+      'menuId': 27,
+      'parentId': 1,
+      'parentName': null,
+      'name': '参数管理',
+      'url': 'sys/config',
+      'perms': 'sys:config:list,sys:config:info,sys:config:save,sys:config:update,sys:config:delete',
+      'type': 1,
+      'icon': 'config',
+      'orderNum': 6,
+      'open': null,
+      'list': null
+    },
+    {
+      'menuId': 30,
+      'parentId': 1,
+      'parentName': null,
+      'name': '文件上传',
+      'url': 'oss/oss',
+      'perms': 'sys:oss:all',
+      'type': 1,
+      'icon': 'oss',
+      'orderNum': 6,
+      'open': null,
+      'list': null
+    },
+    {
+      'menuId': 29,
+      'parentId': 1,
+      'parentName': null,
+      'name': '系统日志',
+      'url': 'sys/log',
+      'perms': 'sys:log:list',
+      'type': 1,
+      'icon': 'log',
+      'orderNum': 7,
+      'open': null,
+      'list': null
+    }
+  ]
+}]
 
 // 获取导航菜单列表 / 权限
-export function nav () {
+export function nav() {
   return {
-    // isOpen: false,
-    url: '/sys/menu/nav',
+    isOpen: false,
+    url: '/v1/menus/nav',
     type: 'get',
     data: {
       'msg': 'success',
@@ -549,22 +545,22 @@ export function nav () {
 }
 
 // 获取菜单列表
-export function list () {
+export function list() {
   return {
-    // isOpen: false,
-    url: '/sys/menu/list',
+    isOpen: false,
+    url: '/v1/menus/list',
     type: 'get',
     data: dataList
   }
 }
 
 // 获取上级菜单
-export function select () {
+export function select() {
   let dataList = JSON.parse(JSON.stringify(navDataList))
   dataList = dataList.concat(dataList[0].list)
   return {
-    // isOpen: false,
-    url: '/sys/menu/select',
+    isOpen: false,
+    url: '/v1/menus/select',
     type: 'get',
     data: {
       'msg': 'success',
@@ -575,10 +571,10 @@ export function select () {
 }
 
 // 获取菜单信息
-export function info () {
+export function info() {
   return {
-    // isOpen: false,
-    url: '/sys/menu/info',
+    isOpen: false,
+    url: '/v1/menus/get',
     type: 'get',
     data: {
       'msg': 'success',
@@ -589,7 +585,7 @@ export function info () {
 }
 
 // 添加菜单
-export function add () {
+export function add() {
   return {
     // isOpen: false,
     url: '/sys/menu/save',
@@ -602,7 +598,7 @@ export function add () {
 }
 
 // 修改菜单
-export function update () {
+export function update() {
   return {
     // isOpen: false,
     url: '/sys/menu/update',
@@ -615,7 +611,7 @@ export function update () {
 }
 
 // 删除菜单
-export function del () {
+export function del() {
   return {
     // isOpen: false,
     url: '/sys/menu/delete',

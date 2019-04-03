@@ -5,7 +5,7 @@ import store from '@/store'
 /**
  * 获取uuid
  */
-export function getUUID () {
+export function getUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
     return (c === 'x' ? (Math.random() * 16 | 0) : ('r&0x3' | '0x8')).toString(16)
   })
@@ -15,7 +15,7 @@ export function getUUID () {
  * 是否有权限
  * @param {*} key
  */
-export function isAuth (key) {
+export function isAuth(key) {
   return JSON.parse(sessionStorage.getItem('permissions') || '[]').indexOf(key) !== -1 || false
 }
 
@@ -25,7 +25,7 @@ export function isAuth (key) {
  * @param {*} id
  * @param {*} pid
  */
-export function treeDataTranslate (data, id = 'id', pid = 'parentId') {
+export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
   var res = []
   var temp = {}
   for (var i = 0; i < data.length; i++) {
@@ -51,8 +51,9 @@ export function treeDataTranslate (data, id = 'id', pid = 'parentId') {
 /**
  * 清除登录信息
  */
-export function clearLoginInfo () {
+export function clearLoginInfo() {
   Vue.cookie.delete('token')
+  Vue.cookie.delete('token_valid_time')
   store.commit('resetStore')
   router.options.isAddDynamicMenuRoutes = false
 }
