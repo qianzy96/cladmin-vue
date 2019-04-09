@@ -84,7 +84,7 @@ export default {
     // 获取当前管理员信息
     getUserInfo() {
       this.$http
-        .getUserInfo()
+        .getPersonalUserInfo()
         .then(({ data }) => {
           if (data && data.code === 0) {
             this.loading = false;

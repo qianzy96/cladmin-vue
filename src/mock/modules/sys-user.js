@@ -18,8 +18,8 @@ for (let i = 0; i < Math.floor(Math.random() * 10 + 1); i++) {
 // 获取用户列表
 export function list() {
   return {
-    // isOpen: false,
-    url: '/sys/user/list',
+    isOpen: false,
+    url: '/v1/users/list',
     type: 'get',
     data: {
       'msg': 'success',
@@ -65,8 +65,8 @@ export function updatePassword() {
 // 添加用户
 export function add() {
   return {
-    // isOpen: false,
-    url: '/sys/user/save',
+    isOpen: false,
+    url: '/v1/users/create',
     type: 'post',
     data: {
       'msg': 'success',
@@ -78,8 +78,8 @@ export function add() {
 // 修改用户
 export function update() {
   return {
-    // isOpen: false,
-    url: '/sys/user/update',
+    isOpen: false,
+    url: '/v1/users/update',
     type: 'post',
     data: {
       'msg': 'success',
@@ -91,8 +91,8 @@ export function update() {
 // 删除用户
 export function del() {
   return {
-    // isOpen: false,
-    url: '/sys/user/delete',
+    isOpen: false,
+    url: '/v1/users/del',
     type: 'post',
     data: {
       'msg': 'success',

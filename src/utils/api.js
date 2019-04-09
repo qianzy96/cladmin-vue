@@ -1,8 +1,18 @@
 import httpRequest from '@/utils/httpRequest'
 
 const api = {
-  getUserInfo: (params = {}) => httpRequest({
+  getPersonalUserInfo: (params = {}) => httpRequest({
     url: httpRequest.adornUrl('/v1/users/personal'),
+    method: 'get',
+    params: httpRequest.adornParams(params)
+  }),
+  getUserInfo: (params = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/users/get'),
+    method: 'get',
+    params: httpRequest.adornParams(params)
+  }),
+  getUserList: (params = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/users/list'),
     method: 'get',
     params: httpRequest.adornParams(params)
   }),
@@ -26,6 +36,21 @@ const api = {
     method: 'get',
     params: httpRequest.adornParams(params)
   }),
+  getRoleList: (params = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/roles/list'),
+    method: 'get',
+    params: httpRequest.adornParams(params)
+  }),
+  getRoleInfo: (params = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/roles/get'),
+    method: 'get',
+    params: httpRequest.adornParams(params)
+  }),
+  getRoleSelect: (params = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/roles/select'),
+    method: 'get',
+    params: httpRequest.adornParams(params)
+  }),
   getRefreshToken: (params = {}) => httpRequest({
     url: httpRequest.adornUrl('/refresh'),
     method: 'get',
@@ -44,6 +69,26 @@ const api = {
   postOrPutMenu: ((data = {}) => httpRequest({
     url: httpRequest.adornUrl(`/v1/menus/${data.menuId ? "update" : "create"}`),
     method: `${data.menuId ? "put" : "post"}`,
+    data: httpRequest.adornData(data)
+  })),
+  postOrPutRole: ((data = {}) => httpRequest({
+    url: httpRequest.adornUrl(`/v1/roles/${data.roleId ? "update" : "create"}`),
+    method: `${data.roleId ? "put" : "post"}`,
+    data: httpRequest.adornData(data)
+  })),
+  postDelRole: ((data = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/roles/del'),
+    method: 'post',
+    data: httpRequest.adornData(data)
+  })),
+  postOrPutUser: ((data = {}) => httpRequest({
+    url: httpRequest.adornUrl(`/v1/users/${data.userId ? "update" : "create"}`),
+    method: `${data.userId ? "put" : "post"}`,
+    data: httpRequest.adornData(data)
+  })),
+  postDelUser: ((data = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/users/del'),
+    method: 'post',
     data: httpRequest.adornData(data)
   })),
   deleteMenu: (params = {}) => httpRequest({
