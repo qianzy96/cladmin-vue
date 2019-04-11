@@ -77,7 +77,7 @@ const api = {
     data: httpRequest.adornData(data)
   })),
   postDelRole: ((data = {}) => httpRequest({
-    url: httpRequest.adornUrl('/v1/roles/del'),
+    url: httpRequest.adornUrl('/v1/roles/delete'),
     method: 'post',
     data: httpRequest.adornData(data)
   })),
@@ -87,12 +87,12 @@ const api = {
     data: httpRequest.adornData(data)
   })),
   postDelUser: ((data = {}) => httpRequest({
-    url: httpRequest.adornUrl('/v1/users/del'),
+    url: httpRequest.adornUrl('/v1/users/delete'),
     method: 'post',
     data: httpRequest.adornData(data)
   })),
   deleteMenu: (params = {}) => httpRequest({
-    url: httpRequest.adornUrl('/v1/menus/del'),
+    url: httpRequest.adornUrl('/v1/menus/delete'),
     method: 'delete',
     params: httpRequest.adornParams(params)
   }),

@@ -76,7 +76,7 @@ const mainRoutes = {
       name: 'demo-echarts',
       meta: {
         title: 'demo-echarts',
-        isTab: true
+        isTab: false
       }
     },
     {

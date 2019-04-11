@@ -5,6 +5,9 @@ import qs from 'qs'
 import merge from 'lodash/merge'
 import moment from 'moment'
 import {
+  Message
+} from 'element-ui';
+import {
   clearLoginInfo
 } from '@/utils'
 
@@ -90,6 +93,8 @@ http.interceptors.response.use(response => {
           })
         }
         break;
+      default:
+        Message.error(error.response.data.message);
     }
   }
   return Promise.reject(error)
