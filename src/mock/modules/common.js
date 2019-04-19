@@ -18,8 +18,8 @@ export function login() {
 // 退出
 export function logout() {
   return {
-    isOpen: true,
-    url: '/sys/logout',
+    isOpen: false,
+    url: '/logout',
     type: 'post',
     data: {
       'msg': 'success',

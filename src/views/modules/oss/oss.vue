@@ -4,30 +4,12 @@
       <el-form-item>
         <el-button type="primary" @click="configHandle()">云存储配置</el-button>
         <el-button type="primary" @click="uploadHandle()">上传文件</el-button>
-        <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="dataList" border v-loading="dataListLoading" @selection-change="selectionChangeHandle" style="width: 100%;">
-      <el-table-column type="selection" header-align="center" align="center" width="50">
-      </el-table-column>
-      <el-table-column prop="id" header-align="center" align="center" width="80" label="ID">
-      </el-table-column>
-      <el-table-column prop="url" header-align="center" align="center" label="URL地址">
-      </el-table-column>
-      <el-table-column prop="createDate" header-align="center" align="center" width="180" label="创建时间">
-      </el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination @size-change="sizeChangeHandle" @current-change="currentChangeHandle" :current-page="pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" :total="totalPage" layout="total, sizes, prev, pager, next, jumper">
-    </el-pagination>
     <!-- 弹窗, 云存储配置 -->
     <config v-if="configVisible" ref="config"></config>
     <!-- 弹窗, 上传文件 -->
-    <upload v-if="uploadVisible" ref="upload" @refreshDataList="getDataList"></upload>
+    <upload v-if="uploadVisible" ref="upload" @refreshDataList="getDataList" @uploadSuccess="uploadSuccess" @removeFile="removeFile" :mimeType="'images'"></upload>
   </div>
 </template>
 
@@ -45,7 +27,10 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       configVisible: false,
-      uploadVisible: false
+      uploadVisible: false,
+      images: [],
+      videos: [],
+      audios: []
     };
   },
   components: {
@@ -53,29 +38,27 @@ export default {
     Upload
   },
   activated() {
-    this.getDataList();
+    //this.getDataList();
   },
   methods: {
     // 获取数据列表
     getDataList() {
       this.dataListLoading = true;
-      this.$http({
-        url: this.$http.adornUrl("/sys/oss/list"),
-        method: "get",
-        params: this.$http.adornParams({
+      this.$http
+        .getOssList({
           page: this.pageIndex,
           limit: this.pageSize
         })
-      }).then(({ data }) => {
-        if (data && data.code === 0) {
-          this.dataList = data.page.list;
-          this.totalPage = data.page.totalCount;
-        } else {
-          this.dataList = [];
-          this.totalPage = 0;
-        }
-        this.dataListLoading = false;
-      });
+        .then(({ data }) => {
+          if (data && data.code === 0) {
+            this.dataList = data.page.list;
+            this.totalPage = data.page.totalCount;
+          } else {
+            this.dataList = [];
+            this.totalPage = 0;
+          }
+          this.dataListLoading = false;
+        });
     },
     // 每页数
     sizeChangeHandle(val) {
@@ -105,6 +88,17 @@ export default {
       this.$nextTick(() => {
         this.$refs.upload.init();
       });
+    },
+    //上传成功
+    uploadSuccess(info) {
+      this[info.mimeType].push(info.url);
+    },
+    //移除上传文件
+    removeFile(info) {
+      this[info.mimeType].splice(
+        this[info.mimeType].findIndex(url => url === info.url),
+        1
+      );
     },
     // 删除
     deleteHandle(id) {

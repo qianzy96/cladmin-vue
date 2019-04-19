@@ -1,6 +1,14 @@
 import httpRequest from '@/utils/httpRequest'
 
 const api = {
+  createUrl: (url = "") => {
+    return httpRequest.adornUrl(url)
+  },
+  getAliyunOssSignature: (params = {}) => httpRequest({
+    url: httpRequest.adornUrl('/oss/generatesignature'),
+    method: 'get',
+    params: httpRequest.adornParams(params)
+  }),
   getPersonalUserInfo: (params = {}) => httpRequest({
     url: httpRequest.adornUrl('/v1/users/personal'),
     method: 'get',
@@ -51,6 +59,16 @@ const api = {
     method: 'get',
     params: httpRequest.adornParams(params)
   }),
+  getOssList: (params = {}) => httpRequest({
+    url: httpRequest.adornUrl('/sys/oss/list'),
+    method: 'get',
+    params: httpRequest.adornParams(params)
+  }),
+  getConfigInfo: (params = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/config/get'),
+    method: 'get',
+    params: httpRequest.adornParams(params)
+  }),
   getRefreshToken: (params = {}) => httpRequest({
     url: httpRequest.adornUrl('/refresh'),
     method: 'get',
@@ -62,9 +80,21 @@ const api = {
     data: httpRequest.adornData(data)
   })),
   postLoginOut: ((data = {}) => httpRequest({
-    url: httpRequest.adornUrl('/sys/logout'),
+    url: httpRequest.adornUrl('/logout'),
     method: 'post',
     data: httpRequest.adornData(data)
+  })),
+  postUploadFileToOSS: ((url, data = {}, progressCallback) => httpRequest({
+    headers: {
+      "Content-Type": "multipart/form-data; boundary={boundary}"
+    },
+    url: url,
+    method: 'post',
+    data: data,
+    onUploadProgress(progressEvent) {
+      let complete = (progressEvent.loaded / progressEvent.total * 100 | 0)
+      progressCallback(complete)
+    }
   })),
   postOrPutMenu: ((data = {}) => httpRequest({
     url: httpRequest.adornUrl(`/v1/menus/${data.menuId ? "update" : "create"}`),
@@ -86,9 +116,19 @@ const api = {
     method: `${data.userId ? "put" : "post"}`,
     data: httpRequest.adornData(data)
   })),
+  postOrPutConfig: ((data = {}) => httpRequest({
+    url: httpRequest.adornUrl(`/v1/config/${data.configId ? "update" : "create"}`),
+    method: `${data.configId ? "put" : "post"}`,
+    data: httpRequest.adornData(data)
+  })),
   postDelUser: ((data = {}) => httpRequest({
     url: httpRequest.adornUrl('/v1/users/delete'),
     method: 'post',
+    data: httpRequest.adornData(data)
+  })),
+  putSaveConfig: ((data = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/oss/saveConfig'),
+    method: 'put',
     data: httpRequest.adornData(data)
   })),
   deleteMenu: (params = {}) => httpRequest({
