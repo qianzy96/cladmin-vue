@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="上传文件" :close-on-click-modal="false" @close="closeHandle" :visible.sync="visible">
-    <el-upload drag :action="url" :before-upload="beforeUploadHandle" :on-success="successHandle" multiple :headers="headers" :http-request="uploadToOss" :on-remove="removeHandle" :accept="accept" style="text-align: center;">
+    <el-upload drag :action="url" :before-upload="beforeUploadHandle" multiple :headers="headers" :http-request="uploadToOss" :on-remove="removeHandle" :accept="accept" :limit="limit" style="text-align: center;">
       <i class="el-icon-upload"></i>
       <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       <div class="el-upload__tip" slot="tip">{{uploadTip}}</div>
@@ -12,7 +12,8 @@
 import { getUUID } from "@/utils";
 export default {
   props: {
-    mimeType: String
+    mimeType: String,
+    limit: Number
   },
   data() {
     return {

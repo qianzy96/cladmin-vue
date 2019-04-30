@@ -87,6 +87,15 @@ const mainRoutes = {
         title: 'demo-ueditor',
         isTab: true
       }
+    },
+    {
+      path: '/content/article-add-or-update',
+      component: _import('modules/content/article-add-or-update'),
+      name: 'article-add-or-update',
+      meta: {
+        title: '添加/修改文章',
+        isTab: true
+      }
     }
   ],
   beforeEnter(to, from, next) {
