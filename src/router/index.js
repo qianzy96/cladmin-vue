@@ -94,7 +94,7 @@ const mainRoutes = {
       name: 'article-add-or-update',
       meta: {
         title: '添加/修改文章',
-        isTab: true
+        isTab: false
       }
     }
   ],

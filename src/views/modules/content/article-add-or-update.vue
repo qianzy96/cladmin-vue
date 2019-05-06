@@ -1,15 +1,18 @@
 <template>
   <div>
-    <el-form ref="dataForm" :model="dataForm" :rules="rules" class="mod-article" label-position="top" :style="siteContentViewHeight">
+    <el-form ref="dataForm" :model="dataForm" :rules="rules" class="mod-article" label-position="top" :style="siteContentViewHeight" v-loading="loading" element-loading-text="正在提交中">
       <el-container style="height:100%">
         <el-container>
-          <el-main>
+          <el-main style="padding:0 20px">
             <el-row>
               <el-col :span="24">
                 <el-form-item style="margin-bottom: 40px;" prop="title">
                   <MDinput v-model="dataForm.title" :maxlength="16" name="name" required>
                     文章标题
                   </MDinput>
+                </el-form-item>
+                <el-form-item style="line-height:0" prop="content">
+                  <ueditor-ok ref="ueditorOk" :frameHeight="540" @contentHandle="setContent"></ueditor-ok>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -21,7 +24,7 @@
             </el-form-item>
           </el-footer>
         </el-container>
-        <el-aside width="400px" class="aside">
+        <el-aside width="300px" class="aside">
           <div class="postInfo-container">
             <el-form-item label="所在分类" prop="parentName">
               <el-popover ref="menuListPopover" placement="bottom-start" trigger="click">
@@ -31,31 +34,29 @@
               <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择分类" class="menu-list__input"></el-input>
             </el-form-item>
             <el-form-item label="封面图片" prop="thumb" class="is-required">
-              <div class="thumb">
-                <img :src='dataForm.thumb[0]?dataForm.thumb[0]:"/static/img/thumb_fakeimg.png"' alt="">
-              </div>
-              <el-button type="info" @click="uploadHandle()">上传图片</el-button>
+              <upload-thumb :defaultUrl="dataForm.thumb" :mimeType="'images'" @uploadSuccess="uploadThumbSuccess" @removeThumb="removeThumb"></upload-thumb>
             </el-form-item>
-            <el-form-item label="发布时间" prop="createTime">
-              <el-date-picker type="date" placeholder="选择日期" v-model="dataForm.createTime" class="createTime"></el-date-picker>
+            <el-form-item label="发布时间" prop="releaseTime">
+              <el-date-picker v-model="dataForm.releaseTime" type="datetime" placeholder="发布时间" class="createTime" value-format="yyyy-MM-dd HH:mm:ss">
+              </el-date-picker>
             </el-form-item>
           </div>
         </el-aside>
       </el-container>
     </el-form>
-    <!-- 弹窗, 上传文件 -->
-    <upload v-if="uploadThumbVisible" ref="uploadThumb" @uploadSuccess="uploadThumbSuccess" @removeFile="removeThumbFile" :mimeType="'images'" :limit="1"></upload>
   </div>
 </template>
 
 <script>
 import MDinput from "@/components/md-input";
+import UeditorOk from "@/components/ueditor-ok";
+import UploadThumb from "@/components/upload-thumb/type-one";
 import { treeDataTranslate } from "@/utils";
-import Upload from "../oss/oss-upload";
+import Upload from "@/components/aliyun-oss/upload";
 export default {
   data() {
     const validateThumb = (rule, value, callback) => {
-      if (value.length <= 0) {
+      if (value == "") {
         callback(new Error("请上传一张封面图片"));
       } else {
         callback();
@@ -63,28 +64,34 @@ export default {
     };
     return {
       dataForm: {
+        articleId: this.$route.query.id || 0,
         title: "",
-        parentId: 0,
+        cateId: 0,
         parentName: "",
-        thumb: [],
-        createTime: ""
+        thumb: "",
+        content: "",
+        releaseTime: "",
+        userId: 0
       },
+      loading: false,
       menuList: [],
       menuListTreeProps: {
         label: "name",
         children: "children"
       },
-      uploadThumbVisible: false,
       rules: {
         title: [{ required: true, message: "请输入文章标题" }],
         parentName: [
           { required: true, message: "所在分类不能为空", trigger: "change" }
         ],
+        content: [
+          { required: true, message: "文章内容不能为空", trigger: "change" }
+        ],
         thumb: [{ validator: validateThumb }]
       }
     };
   },
-  components: { MDinput, Upload },
+  components: { MDinput, Upload, UeditorOk, UploadThumb },
   activated() {
     this.getCategoryData();
   },
@@ -95,49 +102,94 @@ export default {
       }
     },
     siteContentViewHeight() {
-      var height = this.documentClientHeight - 50 - 30 - 2 - 80;
+      var height = this.documentClientHeight - 50 - 30 - 2 - 40;
       return { height: height + "px" };
+    },
+    userName: {
+      get() {
+        return this.$store.state.user.name;
+      }
+    },
+    userId: {
+      get() {
+        return this.$store.state.user.id;
+      }
     }
   },
   methods: {
     getCategoryData() {
-      this.$http.getCategoryList().then(({ data }) => {
-        if (data.code == 0 && data.data) {
-          this.menuList = treeDataTranslate(data.data, "categoryId");
-        }
-      });
+      this.$http
+        .getCategoryList()
+        .then(({ data }) => {
+          if (data.code == 0 && data.data) {
+            this.menuList = treeDataTranslate(data.data, "categoryId");
+          }
+        })
+        .then(() => {
+          if (this.dataForm.articleId) {
+            this.$http
+              .getArticleInfo({ id: this.dataForm.articleId })
+              .then(({ data }) => {
+                if (data && data.code === 0) {
+                  this.dataForm.articleId = data.data.articleId;
+                  this.dataForm.cateId = data.data.cateId;
+                  this.dataForm.content = data.data.content;
+                  this.dataForm.thumb = data.data.thumb;
+                  this.dataForm.title = data.data.title;
+                  this.dataForm.releaseTime = data.data.releaseTime;
+                  this.menuListTreeSetCurrentNode();
+                  this.$refs.ueditorOk.ueContent = this.dataForm.content;
+                } else {
+                  this.$message.error(data.message);
+                  this.$router.go(-1);
+                }
+              });
+          }
+        });
     },
     // 菜单树选中
     menuListTreeCurrentChangeHandle(data, node) {
-      this.dataForm.parentId = data.categoryId;
+      this.dataForm.cateId = data.categoryId;
       this.dataForm.parentName = data.name;
     },
     // 菜单树设置当前选中节点
     menuListTreeSetCurrentNode() {
-      this.$refs.menuListTree.setCurrentKey(this.dataForm.parentId);
+      this.$refs.menuListTree.setCurrentKey(this.dataForm.cateId);
       this.dataForm.parentName = (this.$refs.menuListTree.getCurrentNode() ||
         {})["name"];
     },
-    // 上传文件
-    uploadHandle() {
-      this.uploadThumbVisible = true;
-      this.$nextTick(() => {
-        this.$refs.uploadThumb.init();
-      });
+    uploadThumbSuccess(url) {
+      this.dataForm.thumb = url;
     },
-    //上传成功
-    uploadThumbSuccess(info) {
-      this.dataForm.thumb = [];
-      this.dataForm.thumb.push(info.url);
+    removeThumb(url) {
+      this.dataForm.thumb = "";
     },
-    //移除上传文件
-    removeThumbFile(info) {
-      this.dataForm.thumb = [];
+    setContent(content) {
+      this.dataForm.content = content;
+    },
+    cancelFormSubmit() {
+      this.$router.go(-1);
     },
     dataFormSubmit() {
+      this.dataForm.userId = this.userId;
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
-          console.log("todo submit");
+          this.loading = true;
+          this.$http.postOrPutArticle(this.dataForm).then(({ data }) => {
+            this.loading = false;
+            if (data && data.code === 0) {
+              this.$message({
+                message: "操作成功",
+                type: "success",
+                duration: 1000,
+                onClose: () => {
+                  this.$router.go(-1);
+                }
+              });
+            } else {
+              this.$message.error(data.message);
+            }
+          });
         }
       });
     }
@@ -152,8 +204,8 @@ export default {
     .postInfo-container {
       padding: 20px;
       .thumb {
-        width: 360px;
-        height: 205px;
+        width: 260px;
+        height: 145px;
         overflow: hidden;
         margin-bottom: 10px;
         img {

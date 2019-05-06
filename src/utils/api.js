@@ -142,6 +142,16 @@ const api = {
     method: 'get',
     params: httpRequest.adornParams(params)
   }),
+  getArticleInfo: (params = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/articles/get'),
+    method: 'get',
+    params: httpRequest.adornParams(params)
+  }),
+  postOrPutArticle: ((data = {}) => httpRequest({
+    url: httpRequest.adornUrl(`/v1/articles/${data.articleId ? "update" : "create"}`),
+    method: `${data.articleId ? "put" : "post"}`,
+    data: httpRequest.adornData(data)
+  })),
   //config
   getConfigInfo: (params = {}) => httpRequest({
     url: httpRequest.adornUrl('/v1/config/get'),

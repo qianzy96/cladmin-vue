@@ -20,7 +20,7 @@
       </el-table-column>
       <el-table-column prop="title" header-align="center" align="left" label="标题">
       </el-table-column>
-      <el-table-column prop="createTime" header-align="center" align="center" width="180" label="创建时间">
+      <el-table-column prop="releaseTime" header-align="center" align="center" width="180" label="发布时间">
       </el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
