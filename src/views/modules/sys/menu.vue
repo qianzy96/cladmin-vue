@@ -70,14 +70,6 @@ export default {
         this.dataList = treeDataTranslate(data.data, "menuId");
         this.dataListLoading = false;
       });
-      /* this.$http({
-        url: this.$http.adornUrl("/sys/menu/list"),
-        method: "get",
-        params: this.$http.adornParams()
-      }).then(({ data }) => {
-        this.dataList = treeDataTranslate(data, "menuId");
-        this.dataListLoading = false;
-      }); */
     },
     // 新增 / 修改
     addOrUpdateHandle(id) {
@@ -105,7 +97,7 @@ export default {
                 }
               });
             } else {
-              this.$message.error(data.msg);
+              this.$message.error(data.message);
             }
           });
         })

@@ -3,18 +3,19 @@
     <vue-ueditor-wrap v-model="ueContent" :config="myConfig" @ready="ready" @beforeInit="addCustomUI" :destroy="true"></vue-ueditor-wrap>
     <!-- 弹窗, 上传文件 -->
     <div>
-      <upload v-if="uploadVisible" ref="upload" @uploadSuccess="uploadSuccess" :mimeType="mimeType" @closeHandle="uploadCloseHandle"></upload>
+      <upload v-if="uploadVisible" ref="upload" @uploadSuccess="uploadSuccess" :mimeType="mimeType" @closeHandle="uploadCloseHandle" :uploadDomain="uploadDomain"></upload>
     </div>
   </div>
 </template>
 
 <script>
-import Upload from "@/components/aliyun-oss/upload";
+import Upload from "@/components/upload";
 import VueUeditorWrap from "vue-ueditor-wrap";
 export default {
   name: "UeditorOk",
   props: {
-    frameHeight: Number
+    frameHeight: Number,
+    uploadDomain: String
   },
   components: {
     Upload,
@@ -34,6 +35,8 @@ export default {
         // 初始容器宽度
         initialFrameWidth: "100%",
         serverUrl: "",
+        iframeCssUrl: "/static/UEditor/themes/iframe.css",
+        imageScaleEnabled: false,
         toolbars: [
           [
             "fullscreen",

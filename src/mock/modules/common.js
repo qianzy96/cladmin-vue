@@ -1,5 +1,15 @@
 import Mock from 'mockjs'
 
+// 生成数据列表
+var dataList = []
+for (let i = 0; i < 8; i++) {
+  dataList.push(Mock.mock({
+    'title': '@ctitle(5, 16)',
+    'createTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+    'tag': '公告'
+  }))
+}
+
 // 登录
 export function login() {
   return {
@@ -24,6 +34,19 @@ export function logout() {
     data: {
       'msg': 'success',
       'code': 0
+    }
+  }
+}
+
+export function transactionTableList() {
+  return {
+    isOpen: true,
+    url: '/v1/temp/transactionTableList',
+    type: 'get',
+    data: {
+      'msg': 'success',
+      'code': 0,
+      'data': dataList
     }
   }
 }

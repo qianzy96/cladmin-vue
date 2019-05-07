@@ -5,16 +5,17 @@
     </div>
     <el-button type="info" @click="uploadHandle()">上传图片</el-button>
     <!-- 弹窗, 上传文件 -->
-    <upload v-if="uploadVisible" ref="upload" @uploadSuccess="uploadSuccess" @removeFile="removeFile" :mimeType="mimeType" :limit="1"></upload>
+    <upload v-if="uploadVisible" ref="upload" @uploadSuccess="uploadSuccess" @removeFile="removeFile" :mimeType="mimeType" :limit="1" :uploadDomain="uploadDomain"></upload>
   </div>
 </template>
 
 <script>
-import Upload from "@/components/aliyun-oss/upload";
+import Upload from "@/components/upload";
 export default {
   props: {
     mimeType: String,
-    defaultUrl: String
+    defaultUrl: String,
+    uploadDomain: String
   },
   components: { Upload },
   data() {

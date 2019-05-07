@@ -15,6 +15,11 @@ const api = {
     method: 'get',
     params: httpRequest.adornParams(params)
   }),
+  putPersonalUserInfo: ((data = {}) => httpRequest({
+    url: httpRequest.adornUrl(`/v1/users/updatePersonal`),
+    method: "put",
+    data: httpRequest.adornData(data)
+  })),
   getUserInfo: (params = {}) => httpRequest({
     url: httpRequest.adornUrl('/v1/users/get'),
     method: 'get',
@@ -131,6 +136,18 @@ const api = {
       progressCallback(complete)
     }
   })),
+  postUploadFileToLocal: ((url, data = {}, progressCallback) => httpRequest({
+    headers: {
+      "Content-Type": "multipart/form-data; boundary={boundary}"
+    },
+    url: url,
+    method: 'post',
+    data: data,
+    onUploadProgress(progressEvent) {
+      let complete = (progressEvent.loaded / progressEvent.total * 100 | 0)
+      progressCallback(complete)
+    }
+  })),
   getOssList: (params = {}) => httpRequest({
     url: httpRequest.adornUrl('/sys/oss/list'),
     method: 'get',
@@ -150,6 +167,11 @@ const api = {
   postOrPutArticle: ((data = {}) => httpRequest({
     url: httpRequest.adornUrl(`/v1/articles/${data.articleId ? "update" : "create"}`),
     method: `${data.articleId ? "put" : "post"}`,
+    data: httpRequest.adornData(data)
+  })),
+  postDelArticle: ((data = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/articles/delete'),
+    method: 'post',
     data: httpRequest.adornData(data)
   })),
   //config
@@ -179,6 +201,12 @@ const api = {
     method: 'post',
     data: httpRequest.adornData(data)
   })),
+  //temp
+  getTransactionList: (params = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/temp/transactionTableList'),
+    method: 'get',
+    params: httpRequest.adornParams(params)
+  }),
 }
 
 // export default api

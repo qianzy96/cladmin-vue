@@ -160,35 +160,6 @@ export default {
                 this.$message.error(data.message);
               }
             });
-          /* this.$http({
-            url: this.$http.adornUrl(
-              `/sys/user/${!this.dataForm.id ? "save" : "update"}`
-            ),
-            method: "post",
-            data: this.$http.adornData({
-              userId: this.dataForm.id || undefined,
-              username: this.dataForm.userName,
-              password: this.dataForm.password,
-              email: this.dataForm.email,
-              mobile: this.dataForm.mobile,
-              status: this.dataForm.status,
-              roleIdList: this.dataForm.roleIdList
-            })
-          }).then(({ data }) => {
-            if (data && data.code === 0) {
-              this.$message({
-                message: "操作成功",
-                type: "success",
-                duration: 1500,
-                onClose: () => {
-                  this.visible = false;
-                  this.$emit("refreshDataList");
-                }
-              });
-            } else {
-              this.$message.error(data.msg);
-            }
-          }); */
         }
       });
     }

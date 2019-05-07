@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="上传文件" :close-on-click-modal="false" @close="closeHandle" :visible.sync="visible">
-    <el-upload ref="upload" drag :action="url" :before-upload="beforeUploadHandle" multiple :headers="headers" :http-request="uploadToOss" :on-success="successHandle" :on-remove="removeHandle" :accept="accept" :limit="limit" style="text-align: center;">
+    <el-upload ref="upload" drag :action="url" :before-upload="beforeUploadHandle" multiple :headers="headers" :http-request="uploadHandle" :on-success="successHandle" :on-remove="removeHandle" :accept="accept" :limit="limit" style="text-align: center;">
       <i class="el-icon-upload"></i>
       <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       <div class="el-upload__tip" slot="tip">{{uploadTip}}</div>
@@ -13,7 +13,8 @@ import { getUUID } from "@/utils";
 export default {
   props: {
     mimeType: String,
-    limit: Number
+    limit: Number,
+    uploadDomain: String
   },
   data() {
     return {
@@ -31,6 +32,7 @@ export default {
   },
   methods: {
     init(id) {
+      this.url = this.$http.createUrl(`/v1/upload`);
       this.visible = true;
       let mimeType = [];
       switch (this.mimeType) {
@@ -72,7 +74,30 @@ export default {
       }
       this.num++;
     },
-    uploadToOss(e) {
+    uploadHandle(e) {
+      switch (this.uploadDomain) {
+        case "aliyunOss":
+          this.uploadToAliyunOss(e);
+          break;
+        default:
+          this.uploadToLocal(e);
+          break;
+      }
+    },
+    uploadToLocal(e) {
+      let data = new FormData();
+      data.append("file", e.file, e.file.name);
+      this.$http
+        .postUploadFileToLocal(this.url, data, progress => {
+          e.onProgress({ percent: progress });
+        })
+        .then(({ data }) => {
+          e.file.url = data.data.url;
+          e.file.mimeType = this.mimeType;
+          e.onSuccess(data, e.file);
+        });
+    },
+    uploadToAliyunOss(e) {
       let pro = new Promise((resolve, rej) => {
         let res = JSON.parse(this.$cookie.get("aliyunOSSSign"));
         let now = Date.parse(new Date()) / 1000;
@@ -118,6 +143,7 @@ export default {
           });
       });
     },
+    // 上传成功
     successHandle(response, file) {
       let info = {
         mimeType: file.raw.mimeType,

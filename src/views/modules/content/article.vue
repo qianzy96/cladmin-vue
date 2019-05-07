@@ -25,7 +25,7 @@
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button v-if="isAuth('sys:article:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.articleId)">编辑</el-button>
-          <el-button v-if="isAuth('sys:article:delete')" type="text" size="small" @click="deleteHandle(scope.row.roleId)">删除</el-button>
+          <el-button v-if="isAuth('sys:article:delete')" type="text" size="small" @click="deleteHandle(scope.row.articleId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -45,7 +45,7 @@ export default {
       },
       dataList: [],
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 50,
       totalCount: 0,
       dataListLoading: false,
       dataListSelections: [],
@@ -82,10 +82,23 @@ export default {
           this.dataListLoading = false;
         });
     },
+    getCategoryData() {
+      this.$http.getCategoryList().then(({ data }) => {
+        if (data.code == 0 && data.data) {
+          data.data.unshift({
+            categoryId: "",
+            parentId: 0,
+            name: "全部",
+            icon: "",
+            orderNum: 0
+          });
+          this.categories = treeDataTranslate(data.data, "categoryId");
+        }
+      });
+    },
     // 每页数
     sizeChangeHandle(val) {
       this.pageSize = val;
-      z;
       this.pageIndex = 1;
       this.getDataList();
     },
@@ -102,24 +115,43 @@ export default {
     addOrUpdateHandle(id) {
       this.$router.push({ name: "article-add-or-update", query: { id: id } });
     },
-    //
-    getCategoryData() {
-      this.$http.getCategoryList().then(({ data }) => {
-        if (data.code == 0 && data.data) {
-          data.data.unshift({
-            categoryId: "",
-            parentId: 0,
-            name: "全部",
-            icon: "",
-            orderNum: 0
-          });
-          this.categories = treeDataTranslate(data.data, "categoryId");
-        }
-      });
-    },
     handleItemChange(val) {
       const { length, last = length - 1 } = val;
       this.dataForm.cateId = val[last];
+    },
+    // 删除
+    deleteHandle(id) {
+      var ids = id
+        ? [id]
+        : this.dataListSelections.map(item => {
+            return item.articleId;
+          });
+      this.$confirm(
+        `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          this.$http.postDelArticle({ ids: ids }).then(({ data }) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: "操作成功",
+                type: "success",
+                duration: 1500,
+                onClose: () => {
+                  this.getDataList();
+                }
+              });
+            } else {
+              this.$message.error(data.message);
+            }
+          });
+        })
+        .catch(() => {});
     }
   }
 };

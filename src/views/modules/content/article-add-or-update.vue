@@ -12,7 +12,7 @@
                   </MDinput>
                 </el-form-item>
                 <el-form-item style="line-height:0" prop="content">
-                  <ueditor-ok ref="ueditorOk" :frameHeight="540" @contentHandle="setContent"></ueditor-ok>
+                  <ueditor-ok ref="ueditorOk" :frameHeight="540" @contentHandle="setContent" :uploadDomain="'aliyunOss'"></ueditor-ok>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -34,7 +34,7 @@
               <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择分类" class="menu-list__input"></el-input>
             </el-form-item>
             <el-form-item label="封面图片" prop="thumb" class="is-required">
-              <upload-thumb :defaultUrl="dataForm.thumb" :mimeType="'images'" @uploadSuccess="uploadThumbSuccess" @removeThumb="removeThumb"></upload-thumb>
+              <upload-thumb :defaultUrl="dataForm.thumb" :mimeType="'images'" @uploadSuccess="uploadThumbSuccess" @removeThumb="removeThumb" :uploadDomain="'aliyunOss'"></upload-thumb>
             </el-form-item>
             <el-form-item label="发布时间" prop="releaseTime">
               <el-date-picker v-model="dataForm.releaseTime" type="datetime" placeholder="发布时间" class="createTime" value-format="yyyy-MM-dd HH:mm:ss">
@@ -52,7 +52,6 @@ import MDinput from "@/components/md-input";
 import UeditorOk from "@/components/ueditor-ok";
 import UploadThumb from "@/components/upload-thumb/type-one";
 import { treeDataTranslate } from "@/utils";
-import Upload from "@/components/aliyun-oss/upload";
 export default {
   data() {
     const validateThumb = (rule, value, callback) => {
@@ -91,7 +90,7 @@ export default {
       }
     };
   },
-  components: { MDinput, Upload, UeditorOk, UploadThumb },
+  components: { MDinput, UeditorOk, UploadThumb },
   activated() {
     this.getCategoryData();
   },

@@ -9,13 +9,13 @@
     <!-- 弹窗, 云存储配置 -->
     <config v-if="configVisible" ref="config"></config>
     <!-- 弹窗, 上传文件 -->
-    <upload v-if="uploadVisible" ref="upload" @refreshDataList="getDataList" @uploadSuccess="uploadSuccess" @removeFile="removeFile" :mimeType="'images'"></upload>
+    <upload v-if="uploadVisible" ref="upload" @refreshDataList="getDataList" @uploadSuccess="uploadSuccess" @removeFile="removeFile" :mimeType="'images'" :uploadDomain="'aliyunOss'"></upload>
   </div>
 </template>
 
 <script>
 import Config from "./oss-config";
-import Upload from "./oss-upload";
+import Upload from "@/components/upload";
 export default {
   data() {
     return {
@@ -132,7 +132,7 @@ export default {
                 }
               });
             } else {
-              this.$message.error(data.msg);
+              this.$message.error(data.message);
             }
           });
         })
