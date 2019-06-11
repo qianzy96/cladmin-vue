@@ -3,12 +3,12 @@
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="120px">
       <el-form-item size="mini" label="存储类型">
         <el-radio-group v-model="dataForm.ossType">
-          <el-radio :label="1">阿里云</el-radio>
+          <el-radio :label="'1'">阿里云</el-radio>
           <!-- <el-radio :label="2">七牛</el-radio> -->
           <!-- <el-radio :label="3">腾讯云</el-radio> -->
         </el-radio-group>
       </el-form-item>
-      <template v-if="dataForm.ossType === 1">
+      <template v-if="dataForm.ossType === '1'">
         <!-- <el-form-item label="域名">
           <el-input v-model="dataForm.aliyunDomain" placeholder="阿里云绑定的域名"></el-input>
         </el-form-item>
@@ -28,7 +28,7 @@
           <el-input v-model="dataForm.aliyunBucketName" placeholder="阿里云BucketName"></el-input>
         </el-form-item>
       </template>
-      <template v-else-if="dataForm.ossType === 2">
+      <template v-else-if="dataForm.ossType === '2'">
         <el-form-item size="mini">
           <a href="http://www.renren.io/open/qiniu.html" target="_blank">免费申请(七牛)10GB储存空间</a>
         </el-form-item>
@@ -48,7 +48,7 @@
           <el-input v-model="dataForm.qiniuBucketName" placeholder="七牛存储空间名"></el-input>
         </el-form-item>
       </template>
-      <template v-else-if="dataForm.ossType === 3">
+      <template v-else-if="dataForm.ossType === '3'">
         <el-form-item label="域名">
           <el-input v-model="dataForm.qcloudDomain" placeholder="腾讯云绑定的域名"></el-input>
         </el-form-item>

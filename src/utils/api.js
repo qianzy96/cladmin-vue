@@ -201,9 +201,9 @@ const api = {
     method: 'post',
     data: httpRequest.adornData(data)
   })),
-  //temp
-  getTransactionList: (params = {}) => httpRequest({
-    url: httpRequest.adornUrl('/v1/temp/transactionTableList'),
+  //public-notice
+  getPublicNoticeList: (params = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/publicNotices/list'),
     method: 'get',
     params: httpRequest.adornParams(params)
   }),

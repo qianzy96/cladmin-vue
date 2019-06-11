@@ -40,7 +40,7 @@ export function logout() {
 
 export function transactionTableList() {
   return {
-    isOpen: true,
+    isOpen: false,
     url: '/v1/temp/transactionTableList',
     type: 'get',
     data: {

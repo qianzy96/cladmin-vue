@@ -32,8 +32,10 @@ export default {
   },
   methods: {
     getData() {
-      this.$http.getTransactionList().then(({ data }) => {
-        this.list = data.data;
+      this.$http.getPublicNoticeList().then(({ data }) => {
+        if (data.code === 0 && data.data) {
+          this.list = data.data.list;
+        }
       });
     }
   }
