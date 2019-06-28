@@ -201,9 +201,9 @@ const api = {
     method: 'post',
     data: httpRequest.adornData(data)
   })),
-  //public-notice
+  //bulletin
   getPublicNoticeList: (params = {}) => httpRequest({
-    url: httpRequest.adornUrl('/v1/publicNotices/list'),
+    url: httpRequest.adornUrl('/v1/bulletin/list'),
     method: 'get',
     params: httpRequest.adornParams(params)
   }),

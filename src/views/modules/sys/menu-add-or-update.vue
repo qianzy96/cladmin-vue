@@ -9,7 +9,7 @@
       <el-form-item :label="dataForm.typeList[dataForm.type] + '名称'" prop="name">
         <el-input v-model="dataForm.name" :placeholder="dataForm.typeList[dataForm.type] + '名称'"></el-input>
       </el-form-item>
-      <el-form-item label="上级菜单" prop="parentName">
+      <el-form-item label="上级菜单" prop="parentName" v-show="dataForm.type !== 0">
         <el-popover ref="menuListPopover" placement="bottom-start" trigger="click">
           <el-tree :data="menuList" :props="menuListTreeProps" node-key="menuId" ref="menuListTree" @current-change="menuListTreeCurrentChangeHandle" :default-expand-all="true" :highlight-current="true" :expand-on-click-node="false">
           </el-tree>
@@ -184,6 +184,26 @@ export default {
             });
         }
       });
+    }
+  },
+  watch: {
+    "dataForm.type": {
+      handler(newValue, oldValue) {
+        let data;
+        if (newValue === 0) {
+          data = {
+            menuId: 0,
+            name: "无"
+          };
+        } else {
+          data = {
+            menuId: 0,
+            name: ""
+          };
+        }
+        this.menuListTreeCurrentChangeHandle(data);
+      },
+      immediate: true
     }
   }
 };
