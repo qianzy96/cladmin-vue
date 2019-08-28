@@ -111,7 +111,7 @@ const mainRoutes = {
 }
 
 const router = new Router({
-  mode: 'hash',
+  mode: 'history',
   scrollBehavior: () => ({
     y: 0
   }),

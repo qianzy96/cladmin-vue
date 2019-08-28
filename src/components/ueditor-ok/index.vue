@@ -22,54 +22,64 @@ export default {
     VueUeditorWrap
   },
   data() {
+    let myConfig = {
+      // 编辑器不自动被内容撑高
+      autoHeightEnabled: false,
+      // 初始容器高度
+      initialFrameHeight: this.frameHeight,
+      // 初始容器宽度
+      initialFrameWidth: "100%",
+      UEDITOR_HOME_URL: "/static/UEditor/",
+      serverUrl: "",
+      iframeCssUrl: "/static/UEditor/themes/iframe.css",
+      imageScaleEnabled: false,
+      toolbars: [
+        [
+          "fullscreen",
+          "source",
+          "undo",
+          "redo",
+          "bold",
+          "italic",
+          "underline",
+          "strikethrough",
+          "removeformat",
+          "formatmatch",
+          "autotypeset",
+          "blockquote",
+          "forecolor",
+          "backcolor",
+          "rowspacingtop",
+          "rowspacingbottom",
+          "lineheight",
+          "fontsize",
+          "indent",
+          "justifyleft",
+          "justifycenter",
+          "justifyright",
+          "justifyjustify",
+          "link",
+          "unlink",
+          "foreword",
+          "subhead",
+          "quote"
+        ]
+      ]
+    };
+    if (process.env.NODE_ENV == "production") {
+      myConfig[
+        "UEDITOR_HOME_URL"
+      ] = `/${window.SITE_CONFIG.version}/static/UEditor/`;
+      myConfig[
+        "iframeCssUrl"
+      ] = `/${window.SITE_CONFIG.version}/static/UEditor/themes/iframe.css`;
+    }
     return {
       mimeType: "",
       uploadVisible: false,
       ueditor: null,
       ueContent: "",
-      myConfig: {
-        // 编辑器不自动被内容撑高
-        autoHeightEnabled: false,
-        // 初始容器高度
-        initialFrameHeight: this.frameHeight,
-        // 初始容器宽度
-        initialFrameWidth: "100%",
-        serverUrl: "",
-        iframeCssUrl: "/static/UEditor/themes/iframe.css",
-        imageScaleEnabled: false,
-        toolbars: [
-          [
-            "fullscreen",
-            "source",
-            "undo",
-            "redo",
-            "bold",
-            "italic",
-            "underline",
-            "strikethrough",
-            "removeformat",
-            "formatmatch",
-            "autotypeset",
-            "blockquote",
-            "forecolor",
-            "backcolor",
-            "rowspacingtop",
-            "rowspacingbottom",
-            "lineheight",
-            "fontsize",
-            "indent",
-            "justifyleft",
-            "justifycenter",
-            "justifyright",
-            "justifyjustify",
-            "link",
-            "unlink",
-            "foreword",
-            "subhead",
-            "quote"
-          ]
-        ]
-      },
+      myConfig: myConfig,
       dialogVisible: false
     };
   },
@@ -79,6 +89,10 @@ export default {
       this.ueditor = editorInstance;
     },
     addCustomUI(editorId, editorConfig) {
+      let cssRulesBg = "/static/UEditor/themes/default/images/icons.png";
+      if (process.env.NODE_ENV == "production") {
+        cssRulesBg = `/${window.SITE_CONFIG.version}/static/UEditor/themes/default/images/icons.png`;
+      }
       // 1. 自定义图片上传按钮
       window.UE.registerUI(
         "image-upload-button" + editorId,
@@ -90,8 +104,7 @@ export default {
             // 提示
             title: "上传图片",
             // 需要添加的额外样式，可指定 icon 图标，图标路径参考常见问题 2
-            cssRules:
-              "background-image: url('/static/UEditor/themes/default/images/icons.png') !important;background-position: -726px -77px;",
+            cssRules: `background-image: url('${cssRulesBg}') !important;background-position: -726px -77px;`,
             // 点击时执行的命令
             onclick: () => {
               // 这里可以不用执行命令，做你自己的操作也可
@@ -130,8 +143,7 @@ export default {
             // 提示
             title: "上传视频",
             // 需要添加的额外样式，可指定 icon 图标，图标路径参考常见问题 2
-            cssRules:
-              "background-image: url('/static/UEditor/themes/default/images/icons.png') !important;background-position: -320px -20px;",
+            cssRules: `background-image: url('${cssRulesBg}') !important;background-position: -320px -20px;`,
             // 点击时执行的命令
             onclick: () => {
               // 这里可以不用执行命令，做你自己的操作也可
