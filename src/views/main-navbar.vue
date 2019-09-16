@@ -93,7 +93,8 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       })
-        .then(() => {
+        .then(async () => {
+          await this.$http.getLogout();
           clearLoginInfo();
           this.$router.push({ name: "login" });
         })

@@ -35,6 +35,11 @@ const api = {
     method: 'post',
     data: httpRequest.adornData(data)
   })),
+  postLogoutLoginUser: ((data = {}) => httpRequest({
+    url: httpRequest.adornUrl('/v1/users/logoutLogin'),
+    method: 'post',
+    data: httpRequest.adornData(data)
+  })),
   getUserList: (params = {}) => httpRequest({
     url: httpRequest.adornUrl('/v1/users/list'),
     method: 'get',
@@ -196,11 +201,11 @@ const api = {
     method: 'post',
     data: httpRequest.adornData(data)
   })),
-  postLoginOut: ((data = {}) => httpRequest({
+  getLogout: (params = {}) => httpRequest({
     url: httpRequest.adornUrl('/logout'),
-    method: 'post',
-    data: httpRequest.adornData(data)
-  })),
+    method: 'get',
+    params: httpRequest.adornParams(params)
+  }),
   //bulletin
   getPublicNoticeList: (params = {}) => httpRequest({
     url: httpRequest.adornUrl('/v1/bulletin/list'),

@@ -8,6 +8,7 @@
         <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('sys:user:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('sys:user:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('sys:user:logoutLogin')" type="warning" @click="logoutLoginHandle()" :disabled="dataListSelections.length <= 0">批量注销登录</el-button>
       </el-form-item>
     </el-form>
     <el-table :data="dataList" border v-loading="dataListLoading" @selection-change="selectionChangeHandle" style="width: 100%;">
@@ -33,6 +34,7 @@
         <template slot-scope="scope">
           <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.userId)">修改</el-button>
           <el-button v-if="isAuth('sys:user:delete')" type="text" size="small" @click="deleteHandle(scope.row.userId)">删除</el-button>
+          <el-button v-if="isAuth('sys:user:logoutLogin')" type="text" size="small" @click="logoutLoginHandle(scope.row.userId)">注销登录</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -86,25 +88,6 @@ export default {
           }
           this.dataListLoading = false;
         });
-
-      /* this.$http({
-        url: this.$http.adornUrl("/sys/user/list"),
-        method: "get",
-        params: this.$http.adornParams({
-          page: this.pageIndex,
-          limit: this.pageSize,
-          username: this.dataForm.userName
-        })
-      }).then(({ data }) => {
-        if (data && data.code === 0) {
-          this.dataList = data.page.list;
-          this.totalPage = data.page.totalCount;
-        } else {
-          this.dataList = [];
-          this.totalPage = 0;
-        }
-        this.dataListLoading = false;
-      }); */
     },
     // 每页数
     sizeChangeHandle(val) {
@@ -146,6 +129,42 @@ export default {
       )
         .then(() => {
           this.$http.postDelUser({ ids: userIds }).then(({ data }) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: "操作成功",
+                type: "success",
+                duration: 1500,
+                onClose: () => {
+                  this.getDataList();
+                }
+              });
+            } else {
+              this.$message.error(data.message);
+            }
+          });
+        })
+        .catch(() => {});
+    },
+    // 注销登录
+    logoutLoginHandle(id) {
+      var userIds = id
+        ? [id]
+        : this.dataListSelections.map(item => {
+            return item.userId;
+          });
+      this.$confirm(
+        `确定对[id=${userIds.join(",")}]进行[${
+          id ? "注销登录" : "批量注销登录"
+        }]操作?`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          this.$http.postLogoutLoginUser({ ids: userIds }).then(({ data }) => {
             if (data && data.code === 0) {
               this.$message({
                 message: "操作成功",
